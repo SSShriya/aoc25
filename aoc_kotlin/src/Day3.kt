@@ -1,4 +1,3 @@
-import jdk.internal.net.http.common.Pair.pair
 import java.io.File
 
 /* Part 1 - go through each bank and find the
