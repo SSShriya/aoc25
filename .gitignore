@@ -1,0 +1,33 @@
+### IntelliJ IDEA ###
+out/
+!aoc_kotlin/**/src/main/**/out/
+!aoc_kotlin/**/src/test/**/out/
+!aoc_kotlin/**/src/data/
+
+### Kotlin ###
+aoc_kotlin/.kotlin
+
+### Eclipse ###
+aoc_kotlin/.apt_generated
+aoc_kotlin/.classpath
+aoc_kotlin/.factorypath
+aoc_kotlin/.project
+aoc_kotlin/.settings
+aoc_kotlin/.springBeans
+aoc_kotlin/.sts4-cache
+aoc_kotlin/bin/
+!aoc_kotlin/**/src/main/**/bin/
+!aoc_kotlin/**/src/test/**/bin/
+
+### NetBeans ###
+aoc_kotlin/nbproject/private/
+aoc_kotlin/nbbuild/
+aoc_kotlin/dist/
+aoc_kotlin/nbdist/
+aoc_kotlin/.nb-gradle/
+
+### VS Code ###
+aoc_kotlin/.vscode/
+
+### Mac OS ###
+aoc_kotlin/.DS_Store
