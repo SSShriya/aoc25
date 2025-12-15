@@ -5,6 +5,11 @@ import kotlin.math.sqrt
 class Node {
     var parent: Node = this
     var size: Long = 1
+    val coord : Triple<Long, Long, Long>
+
+    constructor(coord : Triple<Long, Long, Long>) {
+        this.coord = coord
+    }
 
     // Find the parent of each tree
     fun find() : Node {
@@ -15,19 +20,23 @@ class Node {
     }
 
     // Join two sets together - join smaller tree to larger
-    fun union (other: Node) {
+    fun union (other: Node) : Node? {
         val root1 = this.find()
         val root2 = other.find()
-        if (root1 == root2) return
+        if (root1 == root2) return null
 
         if (root1.size < root2.size) {
             root1.parent = root2
             root2.size += root1.size
+            return root1
         } else {
             root2.parent = root1
             root1.size += root2.size
+            return root2
         }
     }
+
+    override fun toString(): String = coord.toString()
 }
 
 /* Find distances between every two points and return the list */
@@ -52,7 +61,7 @@ fun computeDistances (
     return distances.sortedBy { it.third }
 }
 
-// Join trees
+/* Join trees */
 fun createCircuits (
     distances: List<Triple<Node, Node, Double>>,
     connections: Int)
@@ -66,12 +75,35 @@ fun createCircuits (
     }
 }
 
-// Multiply largest 3 circuits
+/* Part 1: Multiply largest 3 circuits */
 fun multiplyLargestSizes (nodes: List<Node>) : Long {
     val roots = nodes.map { it.find() }.toSet()
     val sizes = roots.map { it.size }.sortedDescending()
     return (sizes.take(3).reduce {a, b -> a * b})
 }
+
+/* Part 2: Keep creating circuits until one big set
+   Return the multiplication of the last two coords' x coordinates */
+fun createAllCircuits (
+    distances: List<Triple<Node, Node, Double>>,
+    nodes: List<Node>) : Long
+{
+    var count = 0
+    val roots : MutableList<Node> = nodes.toMutableList()
+    var start = distances[count].first
+    var end = distances[count].second
+
+    while (roots.size > 1) {
+        start = distances[count].first
+        end = distances[count].second
+        val toRemove = start.union(end)
+        if (toRemove != null) roots.remove(toRemove)
+        count++
+    }
+
+    return (start.coord.first * end.coord.first)
+}
+
 
 fun main () {
     // Read in coordinates into a list of triples
@@ -82,11 +114,15 @@ fun main () {
             Triple(coord[0].toLong(), coord[1].toLong(), coord[2].toLong())
         }
     // Create list of nodes
-    val nodes : List<Node> = coords.map { Node () }
+    val nodes : List<Node> = coords.map { Node (it) }
     // Calculate distances between every node
     val distances = computeDistances(coords, nodes)
     // Make 1000 circuits
-    createCircuits(distances, 1000)
+    /*
+    createCircuits(distances, 10)first
     // Multiply largest 3 circuits
-    println (multiplyLargestSizes(nodes))
+    println (multiplyLargestSizes(nodes))*/
+
+    // Join every set
+    println (createAllCircuits(distances, nodes))
 }
