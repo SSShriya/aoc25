@@ -7,7 +7,7 @@ class Device (val name : String, ) {
     val outputs = mutableListOf<Device>()
 }
 
-/* Part 1: Memoised solution to find paths */
+/* Memoised solution to find number of paths */
 fun findNumPaths (device : Device, paths: MutableMap<Device, Long>, dest : String) : Long {
     // If the current device is output
     if (device.name == dest) return 0L
