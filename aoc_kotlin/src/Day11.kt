@@ -8,18 +8,18 @@ class Device (val name : String, ) {
 }
 
 /* Part 1: Memoised solution to find paths */
-fun findNumPaths (device : Device, paths: MutableMap<Device, Int>) : Int {
+fun findNumPaths (device : Device, paths: MutableMap<Device, Long>, dest : String) : Long {
     // If the current device is output
-    if (device.name == "out") return 0
+    if (device.name == dest) return 0L
     // If the current device leads to output
-    if (device.outputs.find {it.name == "out"} != null) return 1
+    if (device.outputs.find {it.name == dest} != null) return 1L
 
     if (paths.containsKey(device)) return paths[device]!!
 
     // Go through each output of the current device, and add up paths
-    var numPaths = 0
+    var numPaths = 0L
     device.outputs.forEach {
-        numPaths += findNumPaths(it, paths)
+        numPaths += findNumPaths(it, paths, dest)
     }
 
     paths[device] = numPaths
@@ -29,11 +29,15 @@ fun findNumPaths (device : Device, paths: MutableMap<Device, Int>) : Int {
 fun main () {
     val devices = mutableListOf<Device>()
     //For part 1:
-    //val start = Device("you")
+    //val you = Device("you")
 
     //For part 2:
-    val start = Device("svr")
-    devices.add(start)
+    val svr = Device("svr")
+    val dac = Device("dac")
+    val fft = Device("fft")
+    devices.add(svr)
+    devices.add(dac)
+    devices.add(fft)
 
     File("data/day11.txt")
         .readLines()
@@ -62,5 +66,12 @@ fun main () {
             }
         }
 
-    println(findNumPaths(start, mutableMapOf()))
+    // Part 1
+    //println(findNumPaths(you, mutableMapOf(), "out"))
+
+    // Part 2
+    val numPaths = (findNumPaths(svr, mutableMapOf(), "fft") *
+                    findNumPaths(fft, mutableMapOf(), "dac") *
+                    findNumPaths(dac, mutableMapOf(), "out"))
+    println(numPaths)
 }
